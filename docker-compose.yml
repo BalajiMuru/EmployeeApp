@@ -110,44 +110,63 @@
 #
 #   version: '3.8'
 
-   services:
-     mysql:
-       image: mysql:8
-       container_name: mysql
-       restart: always
-       environment:
-         MYSQL_ROOT_PASSWORD: root
-         MYSQL_DATABASE: Balaji
-       ports:
-         - "3307:3307"
-       healthcheck:
-         test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
-         interval: 10s
-         timeout: 5s
-         retries: 5
-       networks:
-         - spring-net
+#   services:
+#     mysql:
+#       image: mysql:8
+#       container_name: mysql
+#       restart: always
+#       environment:
+#         MYSQL_ROOT_PASSWORD: root
+#         MYSQL_DATABASE: Balaji
+#       ports:
+#         - "3307:3307"
+#       healthcheck:
+#         test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+#         interval: 10s
+#         timeout: 5s
+#         retries: 5
+#       networks:
+#         - spring-net
+#
+#     employee-app:
+#       build: .
+#       container_name: employee
+#       depends_on:
+#         mysql:
+#           condition: service_healthy
+#       environment:
+#         SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Balaji
+#         SPRING_DATASOURCE_USERNAME: root
+#         SPRING_DATASOURCE_PASSWORD: root
+#         SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#       ports:
+#         - "9998:9998"
+#       networks:
+#         - spring-net
+#
+#   networks:
+#     spring-net:
+#       driver: bridge
+#
 
-     employee-app:
-       build: .
-       container_name: employee
-       depends_on:
-         mysql:
-           condition: service_healthy
-       environment:
-         SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Balaji
-         SPRING_DATASOURCE_USERNAME: root
-         SPRING_DATASOURCE_PASSWORD: root
-         SPRING_JPA_HIBERNATE_DDL_AUTO: update
-       ports:
-         - "9998:9998"
-       networks:
-         - spring-net
 
-   networks:
-     spring-net:
-       driver: bridge
+services:
+  employee-app:
+    build: .
+    container_name: employee
+    environment:
+      SPRING_APPLICATION_NAME: Employee
+      SERVER_PORT: 9999
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/Balaji
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+    ports:
+      - "9999:9999"
+    networks:
+      - spring-net
 
-
-
+networks:
+  spring-net:
+    driver: bridge
 
